@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms" xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" x:Class="OBFeed.FeedPage">
+	<RelativeLayout Padding="0">
+		<!-- Background -->
+		<Image Aspect="AspectFill" Source="background_b" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}" RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height}" />
+
+		<!-- Header -->
+		<RelativeLayout x:Name="rl_header" BackgroundColor="White" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}" HeightRequest="58">
+			<Image Source="logo_black" RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-198}" RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-32}" />
+			<Image Source="ic_menu_24dp" RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=8}" RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-27}" />
+		</RelativeLayout>
+		<ListView HorizontalOptions="FillAndExpand" x:Name="lview_feed_items" SeparatorVisibility="None" BackgroundColor="Transparent" RowHeight="80" RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=rl_header, Property=Height, Factor=1, Constant=16}" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}" RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-88}">
+			<ListView.ItemTemplate>
+				<DataTemplate>
+					<ViewCell>
+						<StackLayout BackgroundColor="#99000000" Orientation="Horizontal" Margin="4" HeightRequest="80" VerticalOptions="Start">
+							<Image Source="{Binding Image}" Margin="8" />
+							<StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
+								<Label Text="{Binding Title}" TextColor="#F08100" FontSize="14" />
+								<Label Text="{Binding PubDate}" TextColor="White" FontSize="10" />
+							</StackLayout>
+							<BoxView WidthRequest="12" HeightRequest="12" Color="#339999" HorizontalOptions="Center" VerticalOptions="Center" Margin="8" />
+						</StackLayout>
+					</ViewCell>
+				</DataTemplate>
+			</ListView.ItemTemplate>
+		</ListView>
+	</RelativeLayout>
+</ContentPage>

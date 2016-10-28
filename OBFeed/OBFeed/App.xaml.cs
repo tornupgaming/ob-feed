@@ -5,7 +5,7 @@ namespace OBFeed {
 		public App() {
 			InitializeComponent();
 
-			MainPage = new OBFeedPage();
+			MainPage = new FeedPage();
 		}
 
 		protected override void OnStart() {
