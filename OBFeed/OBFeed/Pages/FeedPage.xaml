@@ -14,6 +14,7 @@
 				Placeholder = "Enter Search Term"
 				HorizontalTextAlignment="Center"
 				TextColor="#339999"
+				BackgroundColor="White"
 				Text="{Binding SearchTerm}"
 				RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=rl_header, Property=Width, Factor=0.5, Constant=-140}"
 				RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=rl_header, Property=Height, Constant=16}"
@@ -35,6 +36,9 @@
 				SeparatorVisibility="None" 
 				BackgroundColor="Transparent" 
 				RowHeight="80" 
+				IsPullToRefreshEnabled="true"
+				IsRefreshing="{Binding IsRefreshing}"
+				RefreshCommand="{Binding OnShouldRefresh}"
 				RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=txt_search, Property=Y, Factor=1, Constant=40}" 
 				RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}" 
 				RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-132}">

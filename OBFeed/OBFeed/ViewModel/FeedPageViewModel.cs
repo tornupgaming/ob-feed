@@ -2,6 +2,8 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Linq;
+using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace OBFeed {
 	public class FeedPageViewModel : OBNotifyClass {
@@ -70,6 +72,7 @@ namespace OBFeed {
 
 		~FeedPageViewModel() {
 			FeedManager.Instance.OnFeedUpdated -= OnFeedUpdated;
+			Feeds = null;
 		}
 
 		#endregion
@@ -103,6 +106,16 @@ namespace OBFeed {
 		#endregion
 
 		#region Func.
+
+		public Command OnShouldRefresh { get { return new Command(async () => await _OnShouldRefresh()); } }
+
+		async Task _OnShouldRefresh() 
+		{
+			foreach (var feed in Feeds) {
+				await FeedManager.Instance.UpdateFeed(feed);
+			}
+			IsRefreshing = false;
+		}
 
 		void UpdateShownItems() 
 		{

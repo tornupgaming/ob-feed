@@ -5,6 +5,9 @@ namespace OBFeed {
 		public FeedPage() {
 			InitializeComponent();
 			BindingContext = new FeedPageViewModel { Feeds = FeedManager.Instance.MasterFeeds };
+
+			// Disabling Selection
+			lview_feed_items.ItemSelected += (sender, e) => ((ListView)sender).SelectedItem = null;
 		}
 	}
 }
