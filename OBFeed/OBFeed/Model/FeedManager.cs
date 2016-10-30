@@ -6,7 +6,6 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Akavache;
-using Xamarin.Forms;
 
 namespace OBFeed {
 	public class FeedManager {
@@ -46,7 +45,11 @@ namespace OBFeed {
 		FeedManager() {
 
 			// Set up Akavache
-			BlobCache.ApplicationName = Constants.Keys.ApplicationName;
+			try {
+				BlobCache.ApplicationName = Constants.Keys.ApplicationName;
+			} catch (Exception e) {
+				OBDebug.Log("NUnit hates Akavache", e);
+			}
 
 			// Load the saved feeds
 			MasterFeeds = new ObservableCollection<Feed>();
@@ -61,6 +64,7 @@ namespace OBFeed {
 			OBDebug.Log("Loading saved feeds (async)");
 			ObservableCollection<Feed> feeds = null;
 			try {
+				// Will throw an exception if the object doesn't exist - I really do hate exceptions
 				feeds = await BlobCache.LocalMachine.GetObject<ObservableCollection<Feed>>(Constants.Keys.SavedFeeds);
 			} catch (Exception e) {
 				OBDebug.Log(e);
@@ -97,16 +101,18 @@ namespace OBFeed {
 				feed.Items.Add(item);
 			}
 
-			Device.BeginInvokeOnMainThread(() => {
-				OBDebug.Log("Invoking OnFeedUpdated", feed.Url, feed.Items.Count);
-				if (OnFeedUpdated != null) {
-					OnFeedUpdated(this, feed);
-				}
-			});
+			OBDebug.Log("Invoking OnFeedUpdated", feed.Url, feed.Items.Count);
+			if (OnFeedUpdated != null) {
+				OnFeedUpdated(this, feed);
+			}
 		}
 
 		public static List<FeedItem> ParseFeed(XDocument feedDoc) {
 			var items = new List<FeedItem>();
+
+			// Check for nulls
+			if (feedDoc == null) return items;
+
 			var rssItems = feedDoc.Descendants("item");
 			foreach (var itemElement in rssItems) {
 				var title = itemElement.Element("title")?.Value;
@@ -119,7 +125,14 @@ namespace OBFeed {
 	
 		public static async Task<XDocument> GetParsedRssXml(string url) {
 			// If we're within 15 minutes, grab a cached copy of the url response
-			var rawXml = await BlobCache.LocalMachine.GetOrFetchObject(url, async () => await DownloadStringAtUrl(url), DateTimeOffset.UtcNow.AddMinutes(15));
+			string rawXml = string.Empty;
+			try {
+				rawXml = await BlobCache.LocalMachine.GetOrFetchObject(url, async () => await DownloadStringAtUrl(url), DateTimeOffset.UtcNow.AddMinutes(15));
+			} catch (Exception e) {
+				OBDebug.Log("Exception while using akavache", "Attempting manual download instead", e);
+				rawXml = await DownloadStringAtUrl(url);
+			}
+
 			OBDebug.Log("Got raw xml response", url);
 			return XDocument.Parse(rawXml);
 		}
