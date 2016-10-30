@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Net.Http;
 using System.Reactive.Linq;
@@ -27,15 +28,15 @@ namespace OBFeed {
 
 		#region Properties
 
-		HttpClient _HttpClient;
-		public HttpClient HttpClient {
+		static HttpClient _HttpClient;
+		public static HttpClient HttpClient {
 			get { return _HttpClient ?? (_HttpClient = new HttpClient()); }
 		}
 
 		ObservableCollection<Feed> _MasterFeeds;
 		public ObservableCollection<Feed> MasterFeeds {
 			get { return _MasterFeeds; }
-			set { if (value != _MasterFeeds) { _MasterFeeds = value; } }
+			set {  _MasterFeeds = value; }
 		}
 
 		#endregion
@@ -78,25 +79,22 @@ namespace OBFeed {
 			}
 		}
 
-		#endregion
-
-		#region Helper
-
 		public void UpdateFeedInBackground(Feed feed) {
 			OBDebug.Log("Scheduling background feed update", feed.Url);
 			Task.Run(async () => await UpdateFeed(feed));
 		}
 
-		async Task UpdateFeed(Feed feed) {
+		#endregion
+
+		#region Helper
+
+		public async Task UpdateFeed(Feed feed) {
 			OBDebug.Log("Updating feed (async)", feed.Url);
 			feed.Items.Clear();
 
 			var xmlDocument = await GetParsedRssXml(feed.Url);
-			var rssItems = xmlDocument.Descendants("item");
-			foreach (var itemElement in rssItems) {
-				var title = itemElement.Element("title")?.Value;
-				var pubdate = itemElement.Element("pubDate")?.Value;
-				var image = itemElement.Element("enclosure")?.Attribute("url")?.Value; feed.Items.Add(new FeedItem { Title = title, PubDate = pubdate, Image = image });
+			foreach (var item in ParseFeed(xmlDocument)) {
+				feed.Items.Add(item);
 			}
 
 			Device.BeginInvokeOnMainThread(() => {
@@ -106,15 +104,27 @@ namespace OBFeed {
 				}
 			});
 		}
+
+		public static List<FeedItem> ParseFeed(XDocument feedDoc) {
+			var items = new List<FeedItem>();
+			var rssItems = feedDoc.Descendants("item");
+			foreach (var itemElement in rssItems) {
+				var title = itemElement.Element("title")?.Value;
+				var pubdate = itemElement.Element("pubDate")?.Value;
+				var image = itemElement.Element("enclosure")?.Attribute("url")?.Value;
+				items.Add(new FeedItem { Title = title, PubDate = pubdate, Image = image });
+			}
+			return items;
+		}
 	
-		async Task<XDocument> GetParsedRssXml(string url) {
+		public static async Task<XDocument> GetParsedRssXml(string url) {
 			// If we're within 15 minutes, grab a cached copy of the url response
 			var rawXml = await BlobCache.LocalMachine.GetOrFetchObject(url, async () => await DownloadStringAtUrl(url), DateTimeOffset.UtcNow.AddMinutes(15));
 			OBDebug.Log("Got raw xml response", url);
 			return XDocument.Parse(rawXml);
 		}
 
-		async Task<string> DownloadStringAtUrl(string url) {
+		public static async Task<string> DownloadStringAtUrl(string url) {
 			OBDebug.Log("Downloading string at url", url);
 			return await HttpClient.GetStringAsync(url);
 		}
