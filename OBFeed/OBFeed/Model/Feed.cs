@@ -6,6 +6,9 @@ using System.Linq;
 
 namespace OBFeed {
 	public class Feed {
+		
+		public string Url { get; set; }
+
 		public ObservableCollection<FeedItem> Items = new ObservableCollection<FeedItem>();
 
 		/// <summary>
@@ -14,7 +17,8 @@ namespace OBFeed {
 		/// </summary>
 		/// <returns>The items by search term.</returns>
 		/// <param name="term">Term that the item should contain.</param>
-		public IEnumerable GetItemsBySearchTerm(string term) {
+		public IEnumerable<FeedItem> GetItemsBySearchTerm(string term) {
+			if (string.IsNullOrEmpty(term)) return Items;
 			return Items.Where(item => item.Title.Contains(term) || item.PubDate.Contains(term));
 		}
 	}

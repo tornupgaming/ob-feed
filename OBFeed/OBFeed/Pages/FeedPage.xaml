@@ -9,17 +9,45 @@
 			<Image Source="logo_black" RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=1, Constant=-198}" RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-32}" />
 			<Image Source="ic_menu_24dp" RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width, Factor=0, Constant=8}" RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-27}" />
 		</RelativeLayout>
-		<ListView HorizontalOptions="FillAndExpand" x:Name="lview_feed_items" SeparatorVisibility="None" BackgroundColor="Transparent" RowHeight="80" RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=rl_header, Property=Height, Factor=1, Constant=16}" RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}" RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-88}">
+
+		<Entry x:Name="txt_search"
+				Placeholder = "Enter Search Term"
+				HorizontalTextAlignment="Center"
+				TextColor="#339999"
+				Text="{Binding SearchTerm}"
+				RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=rl_header, Property=Width, Factor=0.5, Constant=-140}"
+				RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=rl_header, Property=Height, Constant=16}"
+				RelativeLayout.WidthConstraint="{ConstraintExpression Type=Constant, Constant=280}"
+				RelativeLayout.HeightConstraint="{ConstraintExpression Type=Constant, Constant=32}" />
+
+				<Label x:Name="lbl_listview_placeholder"
+				HorizontalTextAlignment="Center"
+				TextColor="#F08100"
+				Text="{Binding ListViewPlaceholderText}"
+				RelativeLayout.XConstraint="{ConstraintExpression Type=RelativeToView, ElementName=rl_header, Property=Width, Factor=0.5, Constant=-140}"
+				RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=0.5, Constant=16}"
+				RelativeLayout.WidthConstraint="{ConstraintExpression Type=Constant, Constant=280}" />
+		
+		<ListView 
+				ItemsSource="{Binding ItemsToShow}" 
+				HorizontalOptions="FillAndExpand" 
+				x:Name="lview_feed_items" 
+				SeparatorVisibility="None" 
+				BackgroundColor="Transparent" 
+				RowHeight="80" 
+				RelativeLayout.YConstraint="{ConstraintExpression Type=RelativeToView, ElementName=txt_search, Property=Y, Factor=1, Constant=40}" 
+				RelativeLayout.WidthConstraint="{ConstraintExpression Type=RelativeToParent, Property=Width}" 
+				RelativeLayout.HeightConstraint="{ConstraintExpression Type=RelativeToParent, Property=Height, Factor=1, Constant=-132}">
 			<ListView.ItemTemplate>
 				<DataTemplate>
 					<ViewCell>
 						<StackLayout BackgroundColor="#99000000" Orientation="Horizontal" Margin="4" HeightRequest="80" VerticalOptions="Start">
-							<Image Source="{Binding Image}" Margin="8" />
+							<Image Source="{Binding Image}" Margin="8" WidthRequest="64"/>
 							<StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" VerticalOptions="Center">
-								<Label Text="{Binding Title}" TextColor="#F08100" FontSize="14" />
+								<Label Text="{Binding Title}" TextColor="#F08100" FontSize="12" />
 								<Label Text="{Binding PubDate}" TextColor="White" FontSize="10" />
 							</StackLayout>
-							<BoxView WidthRequest="12" HeightRequest="12" Color="#339999" HorizontalOptions="Center" VerticalOptions="Center" Margin="8" />
+							<BoxView WidthRequest="12" HeightRequest="12" Color="#339999" HorizontalOptions="End" VerticalOptions="Center" Margin="8" />
 						</StackLayout>
 					</ViewCell>
 				</DataTemplate>
