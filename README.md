@@ -28,5 +28,7 @@ A UI Test library could be added, a bunch of the Xamarin evangelists suggest tha
 
 ## The Verdict
 Using Xamarin Forms is like telling a professional sculptor that he now has to use Lego to make his sculptures. Sure he can do things a little bit quicker once he gets to grips with Lego, and each piece is 'standard', but it sure as hell isn't going to look any good.
+
 The brief was super basic, so the logic was expanded to allow any amount of feeds, provided the feed has a URL. This was proven by the added TechRadar default feed.
+
 Honestly the most fun aspect of the task was the design of it, although using Xamarin Forms to translate that into an app proved difficult enough for me to consider redoing the app using Xamarin.Android / Xamarin.iOS which would have been quicker and looked/performed/felt better.
