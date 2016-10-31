@@ -26,6 +26,8 @@ async Task<string> GetUrlString (string url) {
 There's pretty much like 10 lines of actual logic in this app. Some really short tests were added, but are merely to prove a point.
 A UI Test library could be added, a bunch of the Xamarin evangelists suggest that a UI Test project should be added just to show that the app opens. Such a thing is as easy as File > New Project.
 
+This app was deployed to iPhone SE 10.1 Simulator, iPad Pro (9.7 Inch) 10.1 Simulator, and a HTC Desire 300.
+
 ## The Verdict
 Using Xamarin Forms is like telling a professional sculptor that he now has to use Lego to make his sculptures. Sure he can do things a little bit quicker once he gets to grips with Lego, and each piece is 'standard', but it sure as hell isn't going to look any good.
 
